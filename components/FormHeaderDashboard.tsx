@@ -1,31 +1,52 @@
+"use client"
 import React from "react"
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-
+import { useSearchParams, useRouter } from "next/navigation"
 const FormHeaderDashboard = () => {
+  const searchParams = useSearchParams()
+  const { replace } = useRouter()
+  const params = new URLSearchParams(searchParams)
+  const currentCategory = searchParams.get("category") || "All"
+
+  const handleSearch = (term: string) => {
+    if (term === "All") {
+      params.delete("category")
+      params.delete("query")
+    } else if (term) {
+      params.set("category", term)
+    } else {
+      params.delete("category")
+    }
+
+    try {
+      replace(`/?${params.toString()}`)
+    } catch (error) {
+      console.error("Failed to replace URL parameters:", error)
+    }
+  }
   return (
     <form className='w-full flex items-center gap-4'>
-      <Select>
+      <Select value={currentCategory} onValueChange={handleSearch}>
         <SelectTrigger className='w-[180px] text-lg '>
-          <SelectValue placeholder='All Categories' />
+          <SelectValue placeholder='Select Category' />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Fruits</SelectLabel>
-            <SelectItem value='apple'>Apple</SelectItem>
-            <SelectItem value='banana'>Banana</SelectItem>
-            <SelectItem value='blueberry'>Blueberry</SelectItem>
-            <SelectItem value='grapes'>Grapes</SelectItem>
-            <SelectItem value='pineapple'>Pineapple</SelectItem>
+            <SelectItem value='All'>All</SelectItem>
+            <SelectItem value='Web Development'>Web Development</SelectItem>
+            <SelectItem value='Node.js'>Node.js</SelectItem>
+            <SelectItem value='PHP'>PHP</SelectItem>
+            <SelectItem value='Database'>Database</SelectItem>
+            <SelectItem value='React'>React</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
