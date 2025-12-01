@@ -11,7 +11,7 @@ const CardProgress = ({title, quantity, icon, bg_color}: {title: string, quantit
         <CardTitle className="text-xl font-semibold">{title}</CardTitle>
         <p className="text-3xl font-bold">{quantity}</p>
       </CardHeader>
-      <CardContent className={`${bg_color} h-28 w-full  flex items-center justify-center rounded-br-xl rounded-tr-xl `}>
+      <CardContent className={`${bg_color} h-26 w-full  flex items-center justify-center rounded-br-xl rounded-tr-xl `}>
         
             {icon}
         

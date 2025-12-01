@@ -13,8 +13,10 @@ import { ProgressScience } from "./Progress"
 import flashcard from "../data/flashcard.json"
 import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
+import { useFlashcardStore } from "../store/flashcardStoe"
 
 const Dashboard = () => {
+  const {addFlashcard, removeAllFlashcards} = useFlashcardStore()
   const searchParams = useSearchParams()
   const [flip, setFlip] = React.useState(true)
   const query = searchParams.get("category") || "All"
@@ -60,7 +62,7 @@ const Dashboard = () => {
        {/* FlipCard */}
 
         <div className='flex justify-center items-center h-screen'>
-      <motion.div className='relative w-full h-[360px] flex items-center justify-center m-8 perspective-[1000px]'>
+      <motion.div className='relative w-full sm:h-[360px] h-[260px] flex items-center justify-center m-8 perspective-[1000px]'>
         <motion.div
           className='w-full h-full relative transform-3d'
           transition={{ duration: 0.7 }}
@@ -70,17 +72,15 @@ const Dashboard = () => {
           <div className='absolute inset-0 w-full h-full bg-secondary rounded-2xl flex items-center justify-center backface-hidden border border-primary-foreground'>
              <Button
           variant={"outline"}
-          className='absolute top-20 right-1/2 translate-x-1/2 bg-card rounded-full'
+          className='absolute min-w-36 top-8 right-1/2 translate-x-1/2 bg-card rounded-full '
         >
           {filteredFlashcard[currentFlashcard].category}
         </Button>
         <h1 className='w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl md:text-3xl font-bold text-primary-foreground'>
           {filteredFlashcard[currentFlashcard].question}
         </h1>
-        <p className='absolute bottom-24 left-1/2 -translate-x-1/2 text-sm md:text-lg lg:text-xl text-primary-foreground'>
-          {flip ? "Click to reveal the answer" : filteredFlashcard[currentFlashcard].answer}
-        </p>
-        <div className='absolute w-[20%] bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 '>
+        
+        <div className='absolute w-[40%] bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 '>
           <ProgressScience />
           <p>
             {filteredFlashcard[currentFlashcard].progress}/
@@ -99,17 +99,18 @@ const Dashboard = () => {
           onClick={() => setFlip((prevState) => !prevState)}
           className='absolute w-full h-full z-10 bg-transparent cursor-pointer '
         >
-          {/* {flip ? "Click to reveal the answer" : "Click to reveal the question"} */}
+          
         </button>
       </motion.div>
     </div> 
 
        {/* Footer */}
       <div className='w-full h-24 flex items-center justify-center gap-4 '>
-        <Button className='shadow-lg rounded-full'>
+        <Button className='shadow-lg rounded-full' 
+        onClick={() => addFlashcard(filteredFlashcard[currentFlashcard])}>
           <CircleCheckBig className='w-6 h-6' />I Know This
         </Button>
-        <Button variant={"outline"} className='rounded-full'>
+        <Button variant={"outline"} className='rounded-full' onClick={() => removeAllFlashcards()}>
           <RotateCcw className='w-6 h-6' />
           Reset Progress
         </Button>

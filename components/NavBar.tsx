@@ -8,7 +8,7 @@ const NavBar = () => {
         <span className='flex items-center justify-center p-2 rounded-full bg-primary'>
           <Image src='/logo.webp' alt='Next.js Logo' width={30} height={30} />
         </span>
-        <h1 className='text-2xl font-bold'>Flashcard App</h1>
+        <h1 className='sm:text-2xl font-bold'>Flashcard App</h1>
       </div>
       <Switch/>
     </div>

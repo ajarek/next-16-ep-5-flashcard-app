@@ -14,7 +14,7 @@ const Switch = () => {
   }
 
   return (
-    <div className='flex items-center gap-2 border border-primary-foreground rounded-2xl p-1'>
+    <div className='hidden sm:flex items-center gap-2 border border-primary-foreground rounded-2xl p-1'>
       <Button
         onClick={handleStudyMode}
         variant='ghost'
