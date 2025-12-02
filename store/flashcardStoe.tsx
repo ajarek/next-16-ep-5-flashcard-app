@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist, createJSONStorage } from "zustand/middleware"
 
 export type Item = {
   id: number
@@ -34,6 +34,6 @@ export const useFlashcardStore = create<ItemState>()(
       removeAllFlashcards: () => set({ items: [] }),
     }),
 
-    { name: 'flashcardStore', storage: createJSONStorage(() => localStorage) }
+    { name: "flashcardStore", storage: createJSONStorage(() => localStorage) }
   )
 )

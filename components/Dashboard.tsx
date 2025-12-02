@@ -100,8 +100,11 @@ const Dashboard = () => {
             </div>
 
             {/* Back Side */}
-            <div className='absolute inset-0 w-full h-full bg-amber-300 rounded-2xl flex items-center justify-center backface-hidden transform-[rotateY(180deg)] border border-primary-foreground'>
-              <span className='text-2xl font-bold'>
+            <div className='absolute inset-0 w-full h-full bg-primary rounded-2xl flex flex-col items-center justify-center  backface-hidden transform-[rotateY(180deg)] border border-primary-foreground'>
+              <h2 className='text-lg font-bold text-primary-foreground'>
+                Answer:
+              </h2>
+              <span className='text-2xl text-center text-primary-foreground font-bold'>
                 {filteredFlashcard[currentFlashcard].answer}
               </span>
             </div>
