@@ -16,9 +16,10 @@ import { motion } from "framer-motion"
 import { useFlashcardStore } from "../store/flashcardStoe"
 
 const Dashboard = () => {
-  const {addFlashcard, removeAllFlashcards} = useFlashcardStore()
+  const { addFlashcard, removeAllFlashcards, items } = useFlashcardStore()
   const searchParams = useSearchParams()
   const [flip, setFlip] = React.useState(true)
+  const [info, setInfo] = React.useState("")
   const query = searchParams.get("category") || "All"
   const [currentFlashcard, setCurrentFlashcard] = React.useState(0)
   const filteredFlashcard =
@@ -47,70 +48,104 @@ const Dashboard = () => {
       <div className='w-full h-24 flex items-center justify-between border-b-2 border-primary-foreground px-4'>
         {/* Header */}
         <FormHeaderDashboard />
-        
+
         {/* Shuffle Button */}
         <Button
           variant={"outline"}
           className='rounded-full text-lg flex items-center gap-2 px-6 py-3 cursor-pointer  '
-          onClick={() => setCurrentFlashcard(Math.floor(Math.random() * filteredFlashcard.length))}
+          onClick={() =>
+            setCurrentFlashcard(
+              Math.floor(Math.random() * filteredFlashcard.length)
+            )
+          }
         >
           <Shuffle className='w-6 h-6' />
           <span>Shuffle</span>
         </Button>
       </div>
 
-       {/* FlipCard */}
+      {/* FlipCard */}
 
-        <div className='flex justify-center items-center h-screen'>
-      <motion.div className='relative w-full sm:h-[360px] h-[260px] flex items-center justify-center m-8 perspective-[1000px]'>
-        <motion.div
-          className='w-full h-full relative transform-3d'
-          transition={{ duration: 0.7 }}
-          animate={{ rotateY: flip ? 0 : 180 }}
-        >
-          {/* Front Side */}
-          <div className='absolute inset-0 w-full h-full bg-secondary rounded-2xl flex items-center justify-center backface-hidden border border-primary-foreground'>
-             <Button
-          variant={"outline"}
-          className='absolute min-w-36 top-8 right-1/2 translate-x-1/2 bg-card rounded-full '
-        >
-          {filteredFlashcard[currentFlashcard].category}
-        </Button>
-        <h1 className='w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl md:text-3xl font-bold text-primary-foreground'>
-          {filteredFlashcard[currentFlashcard].question}
-        </h1>
-        
-        <div className='absolute w-[40%] bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 '>
-          <ProgressScience />
-          <p>
-            {filteredFlashcard[currentFlashcard].progress}/
-            {filteredFlashcard.length}
-          </p>
-        </div>
-          </div>
+      <div className='flex justify-center items-center h-screen'>
+        <motion.div className='relative w-full sm:h-[360px] h-[260px] flex items-center justify-center m-8 perspective-[1000px]'>
+          <motion.div
+            className='w-full h-full relative transform-3d'
+            transition={{ duration: 0.7 }}
+            animate={{ rotateY: flip ? 0 : 180 }}
+          >
+            {/* Front Side */}
+            <div className='absolute inset-0 w-full h-full bg-secondary rounded-2xl flex items-center justify-center backface-hidden border border-primary-foreground'>
+              <Button
+                variant={"outline"}
+                className='absolute min-w-36 top-8 right-1/2 translate-x-1/2 bg-card rounded-full '
+              >
+                {filteredFlashcard[currentFlashcard].category}
+              </Button>
+              <h1 className='w-full text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl md:text-3xl font-bold text-primary-foreground'>
+                {filteredFlashcard[currentFlashcard].question}
+              </h1>
+              {info && (
+                <p className='absolute top-24 left-1/2 -translate-x-1/2 text-lg text-primary-foreground'>
+                  {info}
+                </p>
+              )}
+              <div className='absolute w-[40%] bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 '>
+                <ProgressScience
+                  progress={(items.length / flashcard.length) * 100}
+                />
+                <p>
+                  {items.length}/{flashcard.length}
+                </p>
+              </div>
+            </div>
 
-          {/* Back Side */}
-          <div className='absolute inset-0 w-full h-full bg-amber-300 rounded-2xl flex items-center justify-center backface-hidden transform-[rotateY(180deg)] border border-primary-foreground'>
-            <span className='text-2xl font-bold'>{filteredFlashcard[currentFlashcard].answer}</span>
-          </div>
+            {/* Back Side */}
+            <div className='absolute inset-0 w-full h-full bg-amber-300 rounded-2xl flex items-center justify-center backface-hidden transform-[rotateY(180deg)] border border-primary-foreground'>
+              <span className='text-2xl font-bold'>
+                {filteredFlashcard[currentFlashcard].answer}
+              </span>
+            </div>
+          </motion.div>
+
+          <button
+            onClick={() => setFlip((prevState) => !prevState)}
+            className='absolute w-full h-full z-10 bg-transparent cursor-pointer '
+          ></button>
         </motion.div>
+      </div>
 
-        <button
-          onClick={() => setFlip((prevState) => !prevState)}
-          className='absolute w-full h-full z-10 bg-transparent cursor-pointer '
-        >
-          
-        </button>
-      </motion.div>
-    </div> 
-
-       {/* Footer */}
+      {/* Footer */}
       <div className='w-full h-24 flex items-center justify-center gap-4 '>
-        <Button className='shadow-lg rounded-full' 
-        onClick={() => addFlashcard(filteredFlashcard[currentFlashcard])}>
+        <Button
+          className='shadow-lg rounded-full'
+          onClick={() => {
+            if (
+              items.find(
+                (item) => item.id === filteredFlashcard[currentFlashcard].id
+              )
+            ) {
+              if (currentFlashcard < filteredFlashcard.length - 1) {
+                setCurrentFlashcard(currentFlashcard + 1)
+              }
+              setInfo("Already know this!")
+              setTimeout(() => {
+                setInfo("")
+              }, 2000)
+              return
+            }
+            addFlashcard(filteredFlashcard[currentFlashcard])
+            if (currentFlashcard < filteredFlashcard.length - 1) {
+              setCurrentFlashcard(currentFlashcard + 1)
+            }
+          }}
+        >
           <CircleCheckBig className='w-6 h-6' />I Know This
         </Button>
-        <Button variant={"outline"} className='rounded-full' onClick={() => removeAllFlashcards()}>
+        <Button
+          variant={"outline"}
+          className='rounded-full'
+          onClick={() => removeAllFlashcards()}
+        >
           <RotateCcw className='w-6 h-6' />
           Reset Progress
         </Button>
