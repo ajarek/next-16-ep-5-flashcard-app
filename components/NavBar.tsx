@@ -1,4 +1,5 @@
 import Image from "next/image"
+import {ModeToggle} from "./mode-toggle"
 import Switch from "./Switch"
 
 const NavBar = () => {
@@ -10,6 +11,7 @@ const NavBar = () => {
         </span>
         <h1 className='sm:text-2xl font-bold'>Flashcard App</h1>
       </div>
+      <ModeToggle/>
       <Switch/>
     </div>
   )
